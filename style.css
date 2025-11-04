@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: sans-serif;
+  background-color: black;
+  color: white;
+}
+
+#solarCanvas {
+  display: block;
+}
+
+#infoBox {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.7);
+  padding: 10px;
+  border-radius: 6px;
+  max-width: 250px;
+  display: none;
+}
+
+#ui {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.7);
+  padding: 10px;
+  border-radius: 6px;
+}
+#ui label {
+  display: block;
+  margin-bottom: 5px;
+}
