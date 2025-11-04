@@ -17,16 +17,30 @@ const sun = {
 
 // --- Planètes ---
 const planets = [
-  { name:"Mercure", dist:100, radius:8, angle:0, speed:0.04, color1:"#a5a5a5", color2:"#555555" },
-  { name:"Vénus", dist:150, radius:14, angle:0, speed:0.015, color1:"#f5deb3", color2:"#cfa86c" },
-  { name:"Terre", dist:200, radius:16, angle:0, speed:0.01, color1:"#3399ff", color2:"#0066cc" },
-  { name:"Mars", dist:250, radius:12, angle:0, speed:0.008, color1:"#ff6f61", color2:"#aa2e20" },
-  { name:"Jupiter", dist:350, radius:32, angle:0, speed:0.004, color1:"#d9a066", color2:"#8b5a2b" },
-  { name:"Saturne", dist:450, radius:28, angle:0, speed:0.003, color1:"#f5e0b7", color2:"#c8a265", ring:true },
-  { name:"Uranus", dist:550, radius:22, angle:0, speed:0.002, color1:"#a0e0ff", color2:"#50b0cc" },
-  { name:"Neptune", dist:650, radius:22, angle:0, speed:0.001, color1:"#2a60ff", color2:"#103380" }
+  { el: document.querySelector('.mercury'), dist: 70, speed: 0.04, angle: 0 },
+  { el: document.querySelector('.venus'),   dist: 100, speed: 0.015, angle: 0 },
+  { el: document.querySelector('.earth'),   dist: 130, speed: 0.01, angle: 0 },
+  { el: document.querySelector('.mars'),    dist: 160, speed: 0.008, angle: 0 },
+  { el: document.querySelector('.jupiter'), dist: 200, speed: 0.004, angle: 0 },
+  { el: document.querySelector('.saturne'), dist: 240, speed: 0.003, angle: 0 },
+  { el: document.querySelector('.uranus'),  dist: 280, speed: 0.002, angle: 0 },
+  { el: document.querySelector('.neptune'), dist: 320, speed: 0.001, angle: 0 }
 ];
 
+const sunX = window.innerWidth / 2;
+const sunY = window.innerHeight / 2;
+
+function animate() {
+  planets.forEach(p => {
+    p.angle += p.speed;
+    const x = sunX + Math.cos(p.angle) * p.dist;
+    const y = sunY + Math.sin(p.angle) * p.dist;
+    p.el.style.transform = `translate(${x}px, ${y}px)`;
+  });
+  requestAnimationFrame(animate);
+}
+
+animate();
 const infoBox = document.getElementById('infoBox');
 const speedSlider = document.getElementById('speedSlider');
 const zoomSlider = document.getElementById('zoomSlider');
