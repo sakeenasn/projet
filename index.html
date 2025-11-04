@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Système Solaire Interactif</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="ui">
+    <label>Vitesse : <input type="range" id="speedSlider" min="0" max="0.1" step="0.001" value="0.01"></label>
+    <label>Zoom : <input type="range" id="zoomSlider" min="0.5" max="2" step="0.01" value="1"></label>
+  </div>
+  <div id="infoBox"></div>
+  <canvas id="solarCanvas"></canvas>
+  <script src="main.js"></script>
+</body>
+</html>
