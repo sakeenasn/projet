@@ -1,8 +1,8 @@
-// Sélection des éléments
+// Sélection des planètes et du soleil
 const planets = document.querySelectorAll('.planet');
 const sun = document.querySelector('.sun');
 
-// Tableau pour stocker les animations
+// Liste des orbites
 const planetOrbits = [];
 let globalSpeed = 1;
 
@@ -15,17 +15,17 @@ function orbit(planet, distance, duration) {
     easing: 'linear',
     loop: true,
     autoplay: true,
-    update: anim => {
-      const angle = anim.progress / 100 * 2 * Math.PI;
+    update: (anim) => {
+      const angle = (anim.progress / 100) * 2 * Math.PI;
       const x = Math.cos(angle) * distance;
       const y = Math.sin(angle) * distance;
       planet.style.transform = `translate(${x}px, ${y}px)`;
-    }
+    },
   });
-  planetOrbits.push({ planet, anim, baseDuration: duration });
+  planetOrbits.push({ anim, baseDuration: duration });
 }
 
-// Crée les orbites des planètes
+// Création des orbites
 orbit(document.querySelector('.mercury'), 100, 4000);
 orbit(document.querySelector('.venus'),   150, 7000);
 orbit(document.querySelector('.earth'),   210, 10000);
@@ -35,7 +35,7 @@ orbit(document.querySelector('.saturn'),  400, 25000);
 orbit(document.querySelector('.uranus'),  470, 30000);
 orbit(document.querySelector('.neptune'), 540, 35000);
 
-// Ajout des étoiles
+// Ajoute des étoiles
 const space = document.querySelector('.space');
 for (let i = 0; i < 100; i++) {
   const star = document.createElement('div');
@@ -50,70 +50,70 @@ for (let i = 0; i < 100; i++) {
   space.appendChild(star);
 }
 
-// Informations enrichies sur les planètes
+// Infos détaillées
 const planetInfo = {
   Soleil: `
-    🌞 <b>Type :</b> Étoile naine jaune (G2V)<br>
-    🌡️ <b>Température de surface :</b> ~5 500 °C<br>
+    ⭐ <b>Type :</b> Étoile naine jaune (G2V)<br>
+    🌡️ <b>Température surface :</b> 5 500 °C<br>
     ⚡ <b>Âge :</b> 4,6 milliards d'années<br>
-    🌍 <b>Rôle :</b> Source d’énergie et de lumière du système solaire
+    💥 <b>Rôle :</b> Source d'énergie et de gravité du système solaire
   `,
   Mercure: `
     🪐 <b>Distance du Soleil :</b> 58 millions km<br>
-    🌡️ <b>Température :</b> de -180°C à +430°C<br>
-    ⏱️ <b>Révolution :</b> 88 jours terrestres<br>
+    ⏱️ <b>Année :</b> 88 jours terrestres<br>
+    🌡️ <b>Température :</b> -180°C à +430°C<br>
     🧱 <b>Composition :</b> Roche métallique
   `,
   Vénus: `
     🪐 <b>Distance du Soleil :</b> 108 millions km<br>
-    🌡️ <b>Température moyenne :</b> 465°C<br>
-    ⏱️ <b>Révolution :</b> 225 jours terrestres<br>
-    🌫️ <b>Atmosphère :</b> très dense, riche en dioxyde de carbone
+    ⏱️ <b>Année :</b> 225 jours terrestres<br>
+    🌫️ <b>Atmosphère :</b> CO₂ et nuages d'acide sulfurique<br>
+    🌡️ <b>Température moyenne :</b> 465°C
   `,
   Terre: `
     🌍 <b>Distance du Soleil :</b> 150 millions km<br>
+    ⏱️ <b>Année :</b> 365 jours<br>
     🌡️ <b>Température moyenne :</b> 15°C<br>
-    ⏱️ <b>Révolution :</b> 365 jours<br>
-    💧 <b>Spécificité :</b> seule planète connue avec de la vie
+    💧 <b>Spécificité :</b> Présence d'eau liquide et de vie
   `,
   Mars: `
     🔴 <b>Distance du Soleil :</b> 228 millions km<br>
+    ⏱️ <b>Année :</b> 687 jours terrestres<br>
     🌡️ <b>Température moyenne :</b> -60°C<br>
-    ⏱️ <b>Révolution :</b> 687 jours terrestres<br>
-    🧱 <b>Surface :</b> poussière de fer rougeâtre, possible glace d’eau
+    🧱 <b>Surface :</b> poussière de fer rougeâtre, calottes de glace
   `,
   Jupiter: `
     🌕 <b>Distance du Soleil :</b> 778 millions km<br>
-    🌡️ <b>Température :</b> -110°C<br>
-    ⏱️ <b>Révolution :</b> 12 ans terrestres<br>
-    💨 <b>Composition :</b> Hydrogène et hélium — planète géante gazeuse
+    ⏱️ <b>Année :</b> 12 ans terrestres<br>
+    💨 <b>Atmosphère :</b> Hydrogène et hélium<br>
+    ⚡ <b>Particularité :</b> La plus grande planète, grande tache rouge
   `,
   Saturne: `
     💍 <b>Distance du Soleil :</b> 1,4 milliard km<br>
-    🌡️ <b>Température :</b> -140°C<br>
-    ⏱️ <b>Révolution :</b> 29 ans terrestres<br>
-    💠 <b>Anneaux :</b> formés de glace et de poussière
+    ⏱️ <b>Année :</b> 29 ans terrestres<br>
+    💠 <b>Anneaux :</b> Glace et poussière<br>
+    🌡️ <b>Température :</b> -140°C
   `,
   Uranus: `
     💎 <b>Distance du Soleil :</b> 2,9 milliards km<br>
-    🌡️ <b>Température :</b> -195°C<br>
-    ⏱️ <b>Révolution :</b> 84 ans terrestres<br>
-    🌀 <b>Particularité :</b> axe de rotation incliné à 98°
+    ⏱️ <b>Année :</b> 84 ans terrestres<br>
+    🌀 <b>Inclinaison :</b> 98° sur le côté<br>
+    🌡️ <b>Température :</b> -195°C
   `,
   Neptune: `
     🌊 <b>Distance du Soleil :</b> 4,5 milliards km<br>
-    🌡️ <b>Température :</b> -200°C<br>
-    ⏱️ <b>Révolution :</b> 165 ans terrestres<br>
-    💨 <b>Vent :</b> plus de 2 000 km/h
+    ⏱️ <b>Année :</b> 165 ans terrestres<br>
+    💨 <b>Vents :</b> > 2 000 km/h<br>
+    🌡️ <b>Température :</b> -200°C
   `
 };
 
-// Zone d'information
+// Sélection de la zone info
 const planetName = document.getElementById('planet-name');
 const planetText = document.getElementById('planet-info');
 
-// Clic sur planète
-planets.forEach(planet => {
+// Interaction : clic sur planète
+planets.forEach((planet) => {
   planet.addEventListener('click', () => {
     const name = planet.dataset.name;
     planetName.textContent = name;
@@ -121,7 +121,7 @@ planets.forEach(planet => {
   });
 });
 
-// Clic sur le soleil
+// Interaction : clic sur Soleil
 sun.addEventListener('click', () => {
   planetName.textContent = "Soleil";
   planetText.innerHTML = planetInfo["Soleil"];
@@ -129,8 +129,10 @@ sun.addEventListener('click', () => {
 
 // Slider de vitesse
 const speedRange = document.getElementById('speed-range');
-speedRange.addEventListener('input', e => {
+const speedValue = document.getElementById('speed-value');
+speedRange.addEventListener('input', (e) => {
   globalSpeed = parseFloat(e.target.value);
+  speedValue.textContent = globalSpeed.toFixed(1) + "x";
   planetOrbits.forEach(({ anim, baseDuration }) => {
     anim.duration = baseDuration / globalSpeed;
   });
