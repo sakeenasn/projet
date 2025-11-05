@@ -12,6 +12,7 @@ body {
   height: 100vh;
 }
 
+/* Soleil */
 .sun {
   position: absolute;
   top: 50%;
@@ -22,6 +23,7 @@ body {
   border-radius: 50%;
   box-shadow: 0 0 40px 20px rgba(255,200,50,0.8);
   transform: translate(-50%, -50%);
+  cursor: pointer;
 }
 
 .planet {
@@ -42,34 +44,35 @@ body {
 .uranus  { width: 26px; height: 26px; background: lightblue; }
 .neptune { width: 24px; height: 24px; background: royalblue; }
 
-/* Boîte d’infos */
-#info-box {
+/* Zone d'information */
+#info-panel {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.85);
-  padding: 20px 30px;
+  top: 15px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 15px;
   border-radius: 10px;
-  box-shadow: 0 0 20px #fff3;
-  text-align: center;
-  width: 300px;
+  max-width: 320px;
 }
 
-.hidden {
-  display: none;
+#info-panel h2 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
 }
 
-#close-btn {
-  margin-top: 15px;
-  background: #444;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  cursor: pointer;
-  border-radius: 5px;
+#info-panel p {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-#close-btn:hover {
-  background: #666;
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+#speed-range {
+  width: 100px;
 }
