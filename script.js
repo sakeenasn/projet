@@ -1,10 +1,11 @@
-// Sélection des planètes et du soleil
+// Sélection des planètes et du Soleil
 const planets = document.querySelectorAll('.planet');
 const sun = document.querySelector('.sun');
-
-// Liste des orbites
+const space = document.querySelector('.space');
 const planetOrbits = [];
+
 let globalSpeed = 1;
+let zoomLevel = 1;
 
 // Fonction d'orbite
 function orbit(planet, distance, duration) {
@@ -25,7 +26,7 @@ function orbit(planet, distance, duration) {
   planetOrbits.push({ anim, baseDuration: duration });
 }
 
-// Création des orbites
+// Crée les orbites
 orbit(document.querySelector('.mercury'), 100, 4000);
 orbit(document.querySelector('.venus'),   150, 7000);
 orbit(document.querySelector('.earth'),   210, 10000);
@@ -36,8 +37,7 @@ orbit(document.querySelector('.uranus'),  470, 30000);
 orbit(document.querySelector('.neptune'), 540, 35000);
 
 // Ajoute des étoiles
-const space = document.querySelector('.space');
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 120; i++) {
   const star = document.createElement('div');
   star.style.position = 'absolute';
   star.style.width = '2px';
@@ -50,7 +50,7 @@ for (let i = 0; i < 100; i++) {
   space.appendChild(star);
 }
 
-// Infos détaillées
+// Infos planètes
 const planetInfo = {
   Soleil: `
     ⭐ <b>Type :</b> Étoile naine jaune (G2V)<br>
@@ -59,13 +59,13 @@ const planetInfo = {
     💥 <b>Rôle :</b> Source d'énergie et de gravité du système solaire
   `,
   Mercure: `
-    🪐 <b>Distance du Soleil :</b> 58 millions km<br>
+    🟠 <b>Distance du Soleil :</b> 58 millions km<br>
     ⏱️ <b>Année :</b> 88 jours terrestres<br>
     🌡️ <b>Température :</b> -180°C à +430°C<br>
     🧱 <b>Composition :</b> Roche métallique
   `,
   Vénus: `
-    🪐 <b>Distance du Soleil :</b> 108 millions km<br>
+    💨 <b>Distance du Soleil :</b> 108 millions km<br>
     ⏱️ <b>Année :</b> 225 jours terrestres<br>
     🌫️ <b>Atmosphère :</b> CO₂ et nuages d'acide sulfurique<br>
     🌡️ <b>Température moyenne :</b> 465°C
@@ -89,7 +89,7 @@ const planetInfo = {
     ⚡ <b>Particularité :</b> La plus grande planète, grande tache rouge
   `,
   Saturne: `
-    💍 <b>Distance du Soleil :</b> 1,4 milliard km<br>
+    ❄️ <b>Distance du Soleil :</b> 1,4 milliard km<br>
     ⏱️ <b>Année :</b> 29 ans terrestres<br>
     💠 <b>Anneaux :</b> Glace et poussière<br>
     🌡️ <b>Température :</b> -140°C
@@ -108,20 +108,19 @@ const planetInfo = {
   `
 };
 
-// Sélection de la zone info
+// Sélection du panneau info
 const planetName = document.getElementById('planet-name');
 const planetText = document.getElementById('planet-info');
 
-// Interaction : clic sur planète
-planets.forEach((planet) => {
-  planet.addEventListener('click', () => {
-    const name = planet.dataset.name;
+// Interactions : clics
+planets.forEach(p => {
+  p.addEventListener('click', () => {
+    const name = p.dataset.name;
     planetName.textContent = name;
-    planetText.innerHTML = planetInfo[name] || "Informations indisponibles.";
+    planetText.innerHTML = planetInfo[name] || "Aucune information disponible.";
   });
 });
 
-// Interaction : clic sur Soleil
 sun.addEventListener('click', () => {
   planetName.textContent = "Soleil";
   planetText.innerHTML = planetInfo["Soleil"];
@@ -130,10 +129,29 @@ sun.addEventListener('click', () => {
 // Slider de vitesse
 const speedRange = document.getElementById('speed-range');
 const speedValue = document.getElementById('speed-value');
-speedRange.addEventListener('input', (e) => {
+speedRange.addEventListener('input', e => {
   globalSpeed = parseFloat(e.target.value);
   speedValue.textContent = globalSpeed.toFixed(1) + "x";
   planetOrbits.forEach(({ anim, baseDuration }) => {
     anim.duration = baseDuration / globalSpeed;
   });
 });
+
+// Slider de zoom
+const zoomRange = document.getElementById('zoom-range');
+const zoomValue = document.getElementById('zoom-value');
+zoomRange.addEventListener('input', e => {
+  zoomLevel = parseFloat(e.target.value);
+  zoomValue.textContent = zoomLevel.toFixed(1) + "x";
+  space.style.transform = `scale(${zoomLevel})`;
+});
+
+// Zoom à la molette
+window.addEventListener('wheel', e => {
+  e.preventDefault();
+  zoomLevel += e.deltaY * -0.001;
+  zoomLevel = Math.min(Math.max(0.5, zoomLevel), 2.5);
+  space.style.transform = `scale(${zoomLevel})`;
+  zoomRange.value = zoomLevel;
+  zoomValue.textContent = zoomLevel.toFixed(1) + "x";
+}, { passive: false });
