@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Système Solaire Interactif</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Système solaire interactif - Anime.js</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="ui">
-    <label>Vitesse : <input type="range" id="speedSlider" min="0" max="0.1" step="0.001" value="0.01"></label>
-    <label>Zoom : <input type="range" id="zoomSlider" min="0.5" max="2" step="0.01" value="1"></label>
+  <div class="space">
+    <div class="sun"></div>
+    <div class="planet mercury" data-name="Mercure"></div>
+    <div class="planet venus" data-name="Vénus"></div>
+    <div class="planet earth" data-name="Terre"></div>
+    <div class="planet mars" data-name="Mars"></div>
+    <div class="planet jupiter" data-name="Jupiter"></div>
+    <div class="planet saturn" data-name="Saturne"></div>
+    <div class="planet uranus" data-name="Uranus"></div>
+    <div class="planet neptune" data-name="Neptune"></div>
   </div>
-  <div id="infoBox"></div>
-  <canvas id="solarCanvas"></canvas>
-  <script src="main.js"></script>
+
+  <div id="info-box" class="hidden">
+    <h2 id="planet-name"></h2>
+    <p id="planet-info"></p>
+    <button id="close-btn">Fermer</button>
+  </div>
+
+  <!-- Anime.js depuis CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
