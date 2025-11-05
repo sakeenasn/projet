@@ -3,10 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Système solaire interactif - Anime.js</title>
+  <title>Système solaire interactif</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="info-panel">
+    <h2 id="planet-name">Clique sur un astre 🌍</h2>
+    <p id="planet-info">Découvre les planètes en cliquant dessus !</p>
+    <div class="slider-container">
+      <label for="speed-range">Vitesse :</label>
+      <input type="range" id="speed-range" min="0.2" max="2" step="0.1" value="1">
+      <span id="speed-value">1x</span>
+    </div>
+  </div>
+
   <div class="space">
     <div class="sun" data-name="Soleil"></div>
     <div class="planet mercury" data-name="Mercure"></div>
@@ -19,17 +29,6 @@
     <div class="planet neptune" data-name="Neptune"></div>
   </div>
 
-  <!-- Zone d'information -->
-  <div id="info-panel">
-    <h2 id="planet-name">Clique sur une planète 🌍</h2>
-    <p id="planet-info"></p>
-    <div class="slider-container">
-      <label for="speed-range">Vitesse des planètes :</label>
-      <input type="range" id="speed-range" min="0.2" max="2" step="0.1" value="1">
-    </div>
-  </div>
-
-  <!-- Anime.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
   <script src="script.js"></script>
 </body>
