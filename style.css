@@ -12,7 +12,6 @@ body {
   height: 100vh;
 }
 
-/* Soleil */
 .sun {
   position: absolute;
   top: 50%;
@@ -47,32 +46,34 @@ body {
 /* Zone d'information */
 #info-panel {
   position: absolute;
-  top: 15px;
-  left: 20px;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 10px 15px;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 10px;
-  max-width: 320px;
+  padding: 15px;
+  width: 320px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.1);
+  z-index: 10;
 }
 
 #info-panel h2 {
-  margin: 0 0 5px 0;
+  margin: 0 0 6px 0;
   font-size: 18px;
 }
 
 #info-panel p {
-  margin: 0 0 10px 0;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.4;
+  margin: 0 0 10px 0;
 }
 
 .slider-container {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
+  gap: 8px;
+  font-size: 13px;
 }
 
 #speed-range {
-  width: 100px;
+  width: 120px;
 }
