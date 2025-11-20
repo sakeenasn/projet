@@ -158,15 +158,15 @@ window.addEventListener('wheel', e => {
 
 // --- Sons des planètes ---
 const planetSounds = {
-  Soleil: new Audio("sounds/sun.mp3"),
-  Mercure: new Audio("sounds/mercury.mp3"),
-  Vénus: new Audio("sounds/venus.mp3"),
-  Terre: new Audio("sounds/earth.mp3"),
-  Mars: new Audio("sounds/mars.mp3"),
-  Jupiter: new Audio("sounds/jupiter.mp3"),
-  Saturne: new Audio("sounds/saturn.mp3"),
-  Uranus: new Audio("sounds/uranus.mp3"),
-  Neptune: new Audio("sounds/neptune.mp3")
+  Soleil: new Audio("sun.mp3"),
+  Mercure: new Audio("mercury.mp3"),
+  Vénus: new Audio("venus.mp3"),
+  Terre: new Audio("earth.mp3"),
+  Mars: new Audio("mars.mp3"),
+  Jupiter: new Audio("jupiter.mp3"),
+  Saturne: new Audio("saturn.mp3"),
+  Uranus: new Audio("uranus.mp3"),
+  Neptune: new Audio("neptune.mp3")
 };
 
 // --- Débloquer audio sur iPhone/Safari ---
