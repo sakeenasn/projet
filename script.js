@@ -156,7 +156,7 @@ window.addEventListener('wheel', e => {
   zoomValue.textContent = zoomLevel.toFixed(1) + "x";
 }, { passive: false });
 
-// Sons des planètes
+// --- Sons des planètes ---
 const planetSounds = {
   Soleil: new Audio("sounds/sun.mp3"),
   Mercure: new Audio("sounds/mercury.mp3"),
@@ -169,61 +169,49 @@ const planetSounds = {
   Neptune: new Audio("sounds/neptune.mp3")
 };
 
-// Fonction pour jouer un son
+// --- Débloquer audio sur iPhone/Safari ---
+let audioUnlocked = false;
+function unlockAudioAndPlayFirstTouch() {
+  if (!audioUnlocked) {
+    Object.values(planetSounds).forEach(sound => {
+      sound.play().catch(() => {}); // tentative de lecture
+      sound.pause();
+      sound.currentTime = 0;
+    });
+    audioUnlocked = true;
+    console.log("Audio débloqué sur iPhone !");
+  }
+}
+
+// --- Déclencheur pour le premier toucher ---
+window.addEventListener("touchstart", unlockAudioAndPlayFirstTouch, { once: true });
+window.addEventListener("click", unlockAudioAndPlayFirstTouch, { once: true });
+
+// --- Fonction pour jouer le son d’une planète ---
 function playSound(name) {
-  // On arrête tous les autres sons
+  if (!audioUnlocked) return; // iOS bloque tout avant interaction
   Object.values(planetSounds).forEach(s => {
     s.pause();
     s.currentTime = 0;
   });
-
-  // On joue celui de la planète
   if (planetSounds[name]) {
     planetSounds[name].play().catch(() => {});
   }
 }
 
-// Clic sur les planètes
+// --- Clic sur planètes ---
 planets.forEach(p => {
   p.addEventListener('click', () => {
     const name = p.dataset.name;
     planetName.textContent = name;
     planetText.innerHTML = planetInfo[name] || "Aucune information disponible.";
-
-    playSound(name); 
+    playSound(name);
   });
 });
 
-// Clic sur le Soleil
+// --- Clic sur Soleil ---
 sun.addEventListener('click', () => {
   planetName.textContent = "Soleil";
   planetText.innerHTML = planetInfo["Soleil"];
-
   playSound("Soleil");
-});
-
-// --- Fix Safari iPhone ---
-// 1. Débloquer audio
-let audioUnlocked = false;
-function unlockAudio() {
-  if (!audioUnlocked) {
-    Object.values(planetSounds).forEach(sound => {
-      sound.play().catch(()=>{});
-      sound.pause();
-      sound.currentTime = 0;
-    });
-    audioUnlocked = true;
-    console.log("Audio OK sur iPhone");
-  }
-}
-
-window.addEventListener("touchstart", unlockAudio, { once: true });
-window.addEventListener("click", unlockAudio, { once: true });
-
-// 2. Empêcher Safari d'annuler les animations (important)
-document.addEventListener("gesturestart", e => e.preventDefault());
-
-// 3. Forcer le re-render des animations au chargement
-window.addEventListener("load", () => {
-  planetOrbits.forEach(({anim}) => anim.restart());
 });
