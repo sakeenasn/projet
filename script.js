@@ -155,3 +155,43 @@ window.addEventListener('wheel', e => {
   zoomRange.value = zoomLevel;
   zoomValue.textContent = zoomLevel.toFixed(1) + "x";
 }, { passive: false });
+
+// Sons des planètes
+const planetsounds = {
+Soleil: new Audio ("sounds/sun.mp3"), 
+Mercure: new Audio ("sounds/mercury.mp3"), 
+Vénus: new Audio ("sounds/venus.mp3"), 
+Terre: new Audio ("sounds/earth.mp3"), 
+Mars: new Audio ("sounds/mars.mp3"),
+Jupiter: new Audio ("sounds/jupiter.mp3"), 
+Saturne: new Audio ("sounds/saturn.mp3"), 
+Uranus: new Audio ("sounds/uranus.mp3"),
+Neptune: new Audio ("sounds/neptune.mp3"),
+} ;
+
+function playSound (name) €
+// On arrête tous les autres sons
+Object.values(planetSounds) .forEach(s => {
+s. pause();
+s.currentTime = 0;
+}):
+// On joue celui de la planète
+if (planetSounds [name]) {
+planetSounds [name] .play();
+ }
+}
+
+planets. forEach (p => {
+p.addEventListener('click', ()=> {
+const name = p.dataset.name;
+planetName.textContent = name;
+planetText.innerHTML = planetInfo[name] ||
+"Aucune information disponible.";
+playSound (name); // <<< AJOUT
+});
+});
+sun.addEventListener( 'click', () => {
+planetName.textContent = "Soleil";
+planetText.innerHTML = planetInfo["Soleil"];
+playSound ("Soleil"); // <<< AJOUT
+｝；
