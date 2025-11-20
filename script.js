@@ -201,3 +201,29 @@ sun.addEventListener('click', () => {
 
   playSound("Soleil");
 });
+
+// --- Fix Safari iPhone ---
+// 1. Débloquer audio
+let audioUnlocked = false;
+function unlockAudio() {
+  if (!audioUnlocked) {
+    Object.values(planetSounds).forEach(sound => {
+      sound.play().catch(()=>{});
+      sound.pause();
+      sound.currentTime = 0;
+    });
+    audioUnlocked = true;
+    console.log("Audio OK sur iPhone");
+  }
+}
+
+window.addEventListener("touchstart", unlockAudio, { once: true });
+window.addEventListener("click", unlockAudio, { once: true });
+
+// 2. Empêcher Safari d'annuler les animations (important)
+document.addEventListener("gesturestart", e => e.preventDefault());
+
+// 3. Forcer le re-render des animations au chargement
+window.addEventListener("load", () => {
+  planetOrbits.forEach(({anim}) => anim.restart());
+});
