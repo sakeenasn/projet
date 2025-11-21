@@ -169,48 +169,51 @@ const planetSounds = {
   Neptune: new Audio("neptune.mp3")
 };
 
-// --- Débloquer audio sur iPhone/Safari ---
+// --- Débloquer audio iPhone / Safari ---
 let audioUnlocked = false;
-function unlockAudioAndPlayFirstTouch() {
-  if (!audioUnlocked) {
-    Object.values(planetSounds).forEach(sound => {
-      sound.play().catch(() => {}); // tentative de lecture
-      sound.pause();
-      sound.currentTime = 0;
-    });
-    audioUnlocked = true;
-    console.log("Audio débloqué sur iPhone !");
-  }
+
+function unlockAudio() {
+  if (audioUnlocked) return;
+
+  Object.values(planetSounds).forEach(sound => {
+    sound.play().catch(()=>{}); // essai obligatoire
+    sound.pause();
+    sound.currentTime = 0;
+  });
+
+  audioUnlocked = true;
+  console.log("Audio débloqué 🎧");
 }
 
-// --- Déclencheur pour le premier toucher ---
-window.addEventListener("touchstart", unlockAudioAndPlayFirstTouch, { once: true });
-window.addEventListener("click", unlockAudioAndPlayFirstTouch, { once: true });
+window.addEventListener("touchstart", unlockAudio, { once: true });
+window.addEventListener("click", unlockAudio, { once: true });
 
-// --- Fonction pour jouer le son d’une planète ---
+// --- Fonction pour jouer les sons ---
 function playSound(name) {
-  if (!audioUnlocked) return; // iOS bloque tout avant interaction
+  if (!planetSounds[name]) return;
+
   Object.values(planetSounds).forEach(s => {
     s.pause();
     s.currentTime = 0;
   });
-  if (planetSounds[name]) {
-    planetSounds[name].play().catch(() => {});
-  }
+
+  planetSounds[name].play().catch((e)=>{
+    console.warn("iPhone bloque encore :", e);
+  });
 }
 
-// --- Clic sur planètes ---
+// --- Clic sur une planète ---
 planets.forEach(p => {
-  p.addEventListener('click', () => {
+  p.addEventListener("click", () => {
     const name = p.dataset.name;
     planetName.textContent = name;
-    planetText.innerHTML = planetInfo[name] || "Aucune information disponible.";
+    planetText.innerHTML = planetInfo[name];
     playSound(name);
   });
 });
 
-// --- Clic sur Soleil ---
-sun.addEventListener('click', () => {
+// --- Soleil ---
+sun.addEventListener("click", () => {
   planetName.textContent = "Soleil";
   planetText.innerHTML = planetInfo["Soleil"];
   playSound("Soleil");
