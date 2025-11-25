@@ -54,6 +54,31 @@ body {
 .uranus  { width: 26px; height: 26px; background: lightblue; }
 .neptune { width: 24px; height: 24px; background: royalblue; }
 
+.saturn {
+  width: 30px;
+  height: 30px;
+  background: khaki;
+  border-radius: 50%;
+  position: relative;  /* IMPORTANT pour les anneaux */
+}
+
+/* Anneaux de Saturne */
+.saturn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;   /* Largeur des anneaux */
+  height: 20px;  /* Épaisseur */
+  transform: translate(-50%, -50%) rotate(20deg);
+  border-radius: 50%;
+  border: 4px solid rgba(200, 200, 150, 0.6);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  pointer-events: none;
+  box-shadow: 0 0 8px rgba(255,255,200,0.4);
+}
+
 /* Zone d'information */
 #info-panel {
   position: absolute;
