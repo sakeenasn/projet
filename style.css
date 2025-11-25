@@ -59,24 +59,39 @@ body {
   height: 30px;
   background: khaki;
   border-radius: 50%;
-  position: relative;  /* IMPORTANT pour les anneaux */
+  position: relative; /* important pour que .ring soit positionné par rapport à la planète */
+  z-index: 2;         /* assure que la planète reste au-dessus des anneaux si on le souhaite */
 }
 
-/* Anneaux de Saturne */
-.saturn::before {
-  content: "";
+/* Anneaux (élément interne) */
+.saturn .ring {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 60px;   /* Largeur des anneaux */
-  height: 20px;  /* Épaisseur */
-  transform: translate(-50%, -50%) rotate(20deg);
+  width: 80px;              /* diamètre extérieur des anneaux */
+  height: 28px;             /* épaisseur */
+  transform: translate(-50%, -50%) rotate(18deg);
   border-radius: 50%;
-  border: 4px solid rgba(200, 200, 150, 0.6);
-  border-left-color: transparent;
-  border-right-color: transparent;
+  background: conic-gradient(
+    rgba(255,255,220,0.35),
+    rgba(220,200,150,0.25),
+    rgba(200,170,120,0.18)
+  );
+  box-shadow: 0 0 10px rgba(200,170,120,0.06) inset;
+  pointer-events: none;     /* laisse le clic atteindre la planète */
+  z-index: 1;               /* derrière la planète (puisque .saturn a z-index:2) */
+  filter: blur(0.3px);
+  mix-blend-mode: screen;   /* optionnel, donne un rendu plus lumineux */
+}
+
+/* Option : ajouter un anneau externe plus fin (aspect multi-anneaux) */
+.saturn .ring::after {
+  content: "";
+  position: absolute;
+  inset: 7px 6px;           /* intérieur pour créer un anneau plus fin autour */
+  border-radius: 50%;
+  background: rgba(255,255,210,0.12);
   pointer-events: none;
-  box-shadow: 0 0 8px rgba(255,255,200,0.4);
 }
 
 /* Zone d'information */
