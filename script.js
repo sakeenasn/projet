@@ -218,3 +218,12 @@ sun.addEventListener("click", () => {
   planetText.innerHTML = planetInfo["Soleil"];
   playSound("Soleil");
 });
+
+// --- Bouton pour stopper tous les sons ---
+document.getElementById("stop-sound").addEventListener("click", () => {
+  Object.values(planetSounds).forEach(sound => {
+    sound.pause();
+    sound.currentTime = 0;
+  });
+  console.log("Tous les sons arrêtés 🔇");
+});
