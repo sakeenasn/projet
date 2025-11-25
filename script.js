@@ -164,7 +164,7 @@ const planetSounds = {
   Terre: new Audio("earth.mp3"),
   Mars: new Audio("mars.mp3"),
   Jupiter: new Audio("jupiter.mp3"),
-  Saturne: new Audio("saturne.mp3"),
+  Saturne: new Audio("saturn.mp3"),
   Uranus: new Audio("uranus.mp3"),
   Neptune: new Audio("neptune.mp3")
 };
