@@ -75,6 +75,7 @@ const planetInfo = {
     ⏱️ <b>Année :</b> 365 jours<br>
     🌡️ <b>Température moyenne :</b> 15°C<br>
     💧 <b>Spécificité :</b> Présence d'eau liquide et de vie
+    
     🌙 <b>La lune :</b> Satellite naturel de la Terre<br>
   `,
   Mars: `
