@@ -218,3 +218,25 @@ sun.addEventListener("click", () => {
   planetText.innerHTML = planetInfo["Soleil"];
   playSound("Soleil");
 });
+
+/* --- ➕ Ajout de la Lune autour de la Terre --- */
+const earth = document.querySelector('.earth');
+
+const moon = document.createElement("div");
+moon.className = "moon";
+earth.appendChild(moon);
+
+// Animation de la lune (orbite autour de la Terre)
+anime({
+  targets: moon,
+  rotate: "1turn",
+  duration: 2500, // vitesse de rotation
+  loop: true,
+  easing: "linear",
+  update: anim => {
+    const angle = (anim.progress/100)*2*Math.PI;
+    const x = Math.cos(angle)*28; // distance Terre -> Lune
+    const y = Math.sin(angle)*28;
+    moon.style.transform = `translate(${x}px,${y}px)`;
+  }
+});
