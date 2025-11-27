@@ -74,9 +74,8 @@ const planetInfo = {
     🌍 <b>Distance du Soleil :</b> 150 millions km<br>
     ⏱️ <b>Année :</b> 365 jours<br>
     🌡️ <b>Température moyenne :</b> 15°C<br>
-    💧 <b>Spécificité :</b> Présence d'eau liquide et de vie <br>
-    
-    🌙 <b>La lune :</b> Satellite naturel de la Terre<br>
+    💧 <b>Spécificité :</b> Présence d'eau liquide et de vie
+    <br>🌙 <b>La lune :</b> Satellite naturel de la Terre<br>
   `,
   Mars: `
     🔴 <b>Distance du Soleil :</b> 228 millions km<br>
