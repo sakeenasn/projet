@@ -237,3 +237,9 @@ anime({
     moon.style.transform = `translate(${x}px,${y}px)`;
   }
 });
+
+let isPaused = false;
+document.getElementById("pause-btn").onclick = () => {
+  isPaused = !isPaused;
+  planetOrbits.forEach(({ anim }) => isPaused ? anim.pause() : anim.play());
+};
