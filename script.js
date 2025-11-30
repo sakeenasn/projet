@@ -223,23 +223,82 @@ const moon = document.createElement("div");
 moon.className = "moon";
 earth.appendChild(moon);
 
-// Animation de la lune (orbite autour de la Terre)
-anime({
-  targets: moon,
-  rotate: "1turn",
-  duration: 2500, // vitesse de rotation
-  loop: true,
-  easing: "linear",
-  update: anim => {
-    const angle = (anim.progress/100)*2*Math.PI;
-    const x = Math.cos(angle)*28; // distance Terre -> Lune
-    const y = Math.sin(angle)*28;
-    moon.style.transform = `translate(${x}px,${y}px)`;
+// --- ETAT GLOBAUX ---
+let soundEnabled = true;   // true = son autorisé, false = muet
+let systemPaused = false;  // état Pause / Lecture
+
+// --- ASSURE QUE LA LUNE A UNE RÉFÉRENCE D'ANIMATION (remplace ton anime(...) existant) ---
+let moonAnim = null;
+if (typeof moon !== "undefined" && moon) {
+  moonAnim = anime({
+    targets: moon,
+    rotate: "1turn",
+    duration: 2500,
+    loop: true,
+    easing: "linear",
+    update: anim => {
+      const angle = (anim.progress/100)*2*Math.PI;
+      const x = Math.cos(angle)*28;
+      const y = Math.sin(angle)*28;
+      moon.style.transform = `translate(${x}px,${y}px)`;
+    }
+  });
+}
+
+// --- BOUTON SON (ON/OFF) ---
+const toggleSoundBtn = document.getElementById("toggle-sound");
+toggleSoundBtn.addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+
+  // Mettre à jour l'apparence du bouton
+  toggleSoundBtn.textContent = soundEnabled ? "🔊 Son : ON" : "🔇 Son : OFF";
+  toggleSoundBtn.classList.toggle("off", !soundEnabled);
+
+  // Si on coupe le son, arrêter tous les sons en cours
+  if (!soundEnabled) {
+    Object.values(planetSounds).forEach(s => {
+      if (!s.paused) {
+        s.pause();
+        s.currentTime = 0;
+      }
+    });
   }
 });
 
-let isPaused = false;
-document.getElementById("pause-btn").onclick = () => {
-  isPaused = !isPaused;
-  planetOrbits.forEach(({ anim }) => isPaused ? anim.pause() : anim.play());
-};
+// --- MODIFIER LA FONCTION playSound(name) pour respecter soundEnabled ---
+function playSound(name) {
+  if (!soundEnabled) return;           // si muet, ne joue rien
+  if (!planetSounds[name]) return;
+
+  // arrêt des autres sons
+  Object.values(planetSounds).forEach(s => {
+    s.pause();
+    s.currentTime = 0;
+  });
+
+  planetSounds[name].play().catch(e => {
+    console.warn("Impossible de jouer le son :", e);
+  });
+}
+
+// --- BOUTON PAUSE / REPRENDRE LE SYSTÈME SOLAIRE ---
+const toggleSystemBtn = document.getElementById("toggle-system");
+toggleSystemBtn.addEventListener("click", () => {
+  systemPaused = !systemPaused;
+
+  if (systemPaused) {
+    // Pause toutes les animations Anime.js enregistrées
+    planetOrbits.forEach(({ anim }) => anim.pause());
+    if (moonAnim) moonAnim.pause();
+
+    toggleSystemBtn.textContent = "▶ Reprendre système";
+    toggleSystemBtn.classList.add("paused");
+  } else {
+    // Reprendre
+    planetOrbits.forEach(({ anim }) => anim.play());
+    if (moonAnim) moonAnim.play();
+
+    toggleSystemBtn.textContent = "⏸️ Pause système";
+    toggleSystemBtn.classList.remove("paused");
+  }
+});
