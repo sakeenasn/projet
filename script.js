@@ -36,6 +36,24 @@ orbit(document.querySelector('.saturn'),  400, 25000);
 orbit(document.querySelector('.uranus'),  470, 30000);
 orbit(document.querySelector('.neptune'), 540, 35000);
 
+const orbitDistances = [100,150,210,260,330,400,470,540];
+const orbits = [];
+
+orbitDistances.forEach(dist => {
+  const circle = document.createElement("div");
+  circle.className = "orbit";
+  circle.style.width = dist*2 + "px";
+  circle.style.height = dist*2 + "px";
+  space.appendChild(circle);
+  orbits.push(circle);
+});
+
+document.getElementById("toggle-orbits").onclick = () => {
+  orbits.forEach(o => o.style.display = 
+    o.style.display === "none" ? "block" : "none"
+  );
+};
+
 // Ajoute des étoiles
 for (let i = 0; i < 150; i++) {
   const star = document.createElement("div");
