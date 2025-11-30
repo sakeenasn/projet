@@ -37,16 +37,12 @@ orbit(document.querySelector('.uranus'),  470, 30000);
 orbit(document.querySelector('.neptune'), 540, 35000);
 
 // Ajoute des étoiles
-for (let i = 0; i < 120; i++) {
-  const star = document.createElement('div');
-  star.style.position = 'absolute';
-  star.style.width = '2px';
-  star.style.height = '2px';
-  star.style.background = 'white';
-  star.style.borderRadius = '50%';
-  star.style.top = Math.random() * 100 + '%';
-  star.style.left = Math.random() * 100 + '%';
-  star.style.opacity = Math.random();
+for (let i = 0; i < 150; i++) {
+  const star = document.createElement("div");
+  star.className = "star";
+  star.style.top = Math.random() * 100 + "%";
+  star.style.left = Math.random() * 100 + "%";
+  star.style.animationDuration = (2 + Math.random() * 4) + "s";
   space.appendChild(star);
 }
 
