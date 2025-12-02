@@ -1,4 +1,6 @@
+// ---------------------------
 // Sélection des planètes et du Soleil
+// ---------------------------
 const planets = document.querySelectorAll('.planet');
 const sun = document.querySelector('.sun');
 const space = document.querySelector('.space');
@@ -7,12 +9,14 @@ const planetOrbits = [];
 let globalSpeed = 1;
 let zoomLevel = 1;
 
-// pour le bouton ON/OFF son des planètes
+// pour le bouton on/off son des planètes
 let muteMode = false; // ON/OFF temporaire du son 
 let audioUnlocked = false;
 let systemPaused = false;
 
+// ---------------------------
 // Fonction d'orbite
+// ---------------------------
 function orbit(planet, distance, duration) {
   const anim = anime({
     targets: planet,
@@ -31,7 +35,9 @@ function orbit(planet, distance, duration) {
   planetOrbits.push({ anim, baseDuration: duration });
 }
 
+// ---------------------------
 // Crée les orbites
+// ---------------------------
 orbit(document.querySelector('.mercury'), 100, 4000);
 orbit(document.querySelector('.venus'),   150, 7000);
 orbit(document.querySelector('.earth'),   210, 10000);
@@ -41,7 +47,9 @@ orbit(document.querySelector('.saturn'),  400, 25000);
 orbit(document.querySelector('.uranus'),  470, 30000);
 orbit(document.querySelector('.neptune'), 540, 35000);
 
+// ---------------------------
 // Ajoute des étoiles
+// ---------------------------
 for (let i = 0; i < 150; i++) {
   const star = document.createElement("div");
   star.className = "star";
@@ -51,7 +59,9 @@ for (let i = 0; i < 150; i++) {
   space.appendChild(star);
 }
 
+// ---------------------------
 // Infos planètes
+// ---------------------------
 const planetInfo = {
   Soleil: `
     ⭐ <b>Type :</b> Étoile naine jaune (G2V)<br>
@@ -110,27 +120,15 @@ const planetInfo = {
   `
 };
 
+// ---------------------------
 // Sélection du panneau info
+// ---------------------------
 const planetName = document.getElementById('planet-name');
 const planetText = document.getElementById('planet-info');
 
-// Interactions : clics planètes
-planets.forEach(p => {
-  p.addEventListener('click', () => {
-    const name = p.dataset.name;
-    planetName.textContent = name;
-    planetText.innerHTML = planetInfo[name] || "Aucune information disponible.";
-    playSound(name);
-  });
-});
-
-sun.addEventListener('click', () => {
-  planetName.textContent = "Soleil";
-  planetText.innerHTML = planetInfo["Soleil"];
-  playSound("Soleil");
-});
-
-// Slider de vitesse
+// ---------------------------
+// Slider vitesse
+// ---------------------------
 const speedRange = document.getElementById('speed-range');
 const speedValue = document.getElementById('speed-value');
 speedRange.addEventListener('input', e => {
@@ -141,7 +139,9 @@ speedRange.addEventListener('input', e => {
   });
 });
 
-// Slider de zoom
+// ---------------------------
+// Slider zoom
+// ---------------------------
 const zoomRange = document.getElementById('zoom-range');
 const zoomValue = document.getElementById('zoom-value');
 zoomRange.addEventListener('input', e => {
@@ -160,21 +160,9 @@ window.addEventListener('wheel', e => {
   zoomValue.textContent = zoomLevel.toFixed(1) + "x";
 }, { passive: false });
 
-// --- PLAYSOUND / Fonction pour jouer les sons ---
-function playSound(name) {
-  if (!planetSounds[name]) return;
-
-  // Si le son était coupé par STOP → réactivation automatique
-  if (muteMode) muteMode = false;
-
-  // Stopper tout avant de démarrer un autre son
-  Object.values(planetSounds).forEach(s => { s.pause(); s.currentTime=0; });
-
-  // Jouer le son
-  planetSounds[name].play().catch(e => console.warn("Audio bloqué:", e));
-}
-
-// --- Sons des planètes ---
+// ---------------------------
+// Sons des planètes
+// ---------------------------
 const planetSounds = {
   Soleil: new Audio("sun.mp3"),
   Mercure: new Audio("mercury.mp3"),
@@ -187,7 +175,60 @@ const planetSounds = {
   Neptune: new Audio("neptune.mp3")
 };
 
-// --- Ajout de la Lune autour de la Terre ---
+// Débloquer audio iPhone / Safari
+function unlockAudio() {
+  if (audioUnlocked) return;
+  Object.values(planetSounds).forEach(sound => {
+    sound.play().catch(()=>{});
+    sound.pause();
+    sound.currentTime = 0;
+  });
+  audioUnlocked = true;
+  console.log("Audio débloqué 🎧");
+}
+window.addEventListener("touchstart", unlockAudio, { once: true });
+window.addEventListener("click", unlockAudio, { once: true });
+
+// ---------------------------
+// Fonction playSound classique (respecte soundEnabled)
+// ---------------------------
+let soundEnabled = true; // bouton Son ON/OFF
+
+function playSound(name) {
+  if (!soundEnabled) return;
+  if (!planetSounds[name]) return;
+
+  // Arrêter tous les autres sons
+  Object.values(planetSounds).forEach(s => {
+    s.pause();
+    s.currentTime = 0;
+  });
+
+  // Jouer le son
+  planetSounds[name].play().catch(e => console.warn("Audio bloqué:", e));
+}
+
+// ---------------------------
+// Clic sur planètes et Soleil
+// ---------------------------
+planets.forEach(p => {
+  p.addEventListener("click", () => {
+    const name = p.dataset.name;
+    planetName.textContent = name;
+    planetText.innerHTML = planetInfo[name];
+    playSound(name);
+  });
+});
+
+sun.addEventListener("click", () => {
+  planetName.textContent = "Soleil";
+  planetText.innerHTML = planetInfo["Soleil"];
+  playSound("Soleil");
+});
+
+// ---------------------------
+// Lune autour de la Terre
+// ---------------------------
 const earth = document.querySelector('.earth');
 const moon = document.createElement("div");
 moon.className = "moon";
@@ -207,16 +248,41 @@ let moonAnim = anime({
   }
 });
 
-// --- BOUTON STOP SON ---
+// ---------------------------
+// Bouton Stop son
+// ---------------------------
 document.getElementById("stop-sound").addEventListener("click", () => {
-  Object.values(planetSounds).forEach(s => { s.pause(); s.currentTime=0; });
-  muteMode = true;
+  Object.values(planetSounds).forEach(s => {
+    s.pause();
+    s.currentTime = 0;
+  });
+  muteMode = true; // mode muet temporaire
 });
 
-// --- BOUTON PAUSE / REPRENDRE LE SYSTÈME SOLAIRE ---
+// ---------------------------
+// Bouton Son ON/OFF
+// ---------------------------
+const toggleSoundBtn = document.getElementById("toggle-sound");
+toggleSoundBtn.addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+  toggleSoundBtn.textContent = soundEnabled ? "🔊 Son : ON" : "🔇 Son : OFF";
+  toggleSoundBtn.classList.toggle("off", !soundEnabled);
+
+  if (!soundEnabled) {
+    Object.values(planetSounds).forEach(s => {
+      s.pause();
+      s.currentTime = 0;
+    });
+  }
+});
+
+// ---------------------------
+// Bouton Pause / Reprendre le système solaire
+// ---------------------------
 const toggleSystemBtn = document.getElementById("toggle-system");
 toggleSystemBtn.addEventListener("click", () => {
   systemPaused = !systemPaused;
+
   if (systemPaused) {
     planetOrbits.forEach(({ anim }) => anim.pause());
     if (moonAnim) moonAnim.pause();
