@@ -37,16 +37,12 @@ orbit(document.querySelector('.uranus'),  470, 30000);
 orbit(document.querySelector('.neptune'), 540, 35000);
 
 // Ajoute des étoiles
-for (let i = 0; i < 120; i++) {
-  const star = document.createElement('div');
-  star.style.position = 'absolute';
-  star.style.width = '2px';
-  star.style.height = '2px';
-  star.style.background = 'white';
-  star.style.borderRadius = '50%';
-  star.style.top = Math.random() * 100 + '%';
-  star.style.left = Math.random() * 100 + '%';
-  star.style.opacity = Math.random();
+for (let i = 0; i < 150; i++) {
+  const star = document.createElement("div");
+  star.className = "star";
+  star.style.top = Math.random() * 100 + "%";
+  star.style.left = Math.random() * 100 + "%";
+  star.style.animationDuration = (2 + Math.random() * 4) + "s";
   space.appendChild(star);
 }
 
@@ -227,55 +223,82 @@ const moon = document.createElement("div");
 moon.className = "moon";
 earth.appendChild(moon);
 
-// Animation de la lune (orbite autour de la Terre)
-const moonAnim = anime({
-  targets: moon,
-  rotate: "1turn",
-  duration: 2500, // vitesse de rotation
-  loop: true,
-  easing: "linear",
-  update: anim => {
-    const angle = (anim.progress/100)*2*Math.PI;
-    const x = Math.cos(angle)*28; // distance Terre -> Lune
-    const y = Math.sin(angle)*28;
-    moon.style.transform = `translate(${x}px,${y}px)`;
+// --- ETAT GLOBAUX ---
+let soundEnabled = true;   // true = son autorisé, false = muet
+let systemPaused = false;  // état Pause / Lecture
+
+// --- ASSURE QUE LA LUNE A UNE RÉFÉRENCE D'ANIMATION (remplace ton anime(...) existant) ---
+let moonAnim = null;
+if (typeof moon !== "undefined" && moon) {
+  moonAnim = anime({
+    targets: moon,
+    rotate: "1turn",
+    duration: 2500,
+    loop: true,
+    easing: "linear",
+    update: anim => {
+      const angle = (anim.progress/100)*2*Math.PI;
+      const x = Math.cos(angle)*28;
+      const y = Math.sin(angle)*28;
+      moon.style.transform = `translate(${x}px,${y}px)`;
+    }
+  });
+}
+
+// --- BOUTON SON (ON/OFF) ---
+const toggleSoundBtn = document.getElementById("toggle-sound");
+toggleSoundBtn.addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+
+  // Mettre à jour l'apparence du bouton
+  toggleSoundBtn.textContent = soundEnabled ? "🔊 Son : ON" : "🔇 Son : OFF";
+  toggleSoundBtn.classList.toggle("off", !soundEnabled);
+
+  // Si on coupe le son, arrêter tous les sons en cours
+  if (!soundEnabled) {
+    Object.values(planetSounds).forEach(s => {
+      if (!s.paused) {
+        s.pause();
+        s.currentTime = 0;
+      }
+    });
   }
 });
 
-// --- Bouton son ---
-let soundOn = true;
-const toggleSoundBtn = document.getElementById('toggle-sound');
-
-toggleSoundBtn.addEventListener('click', () => {
-  soundOn = !soundOn;
-  toggleSoundBtn.textContent = soundOn ? "🔊 Son : ON" : "🔇 Son : OFF";
-});
-
+// --- MODIFIER LA FONCTION playSound(name) pour respecter soundEnabled ---
 function playSound(name) {
-  if (!soundOn || !planetSounds[name]) return;
+  if (!soundEnabled) return;           // si muet, ne joue rien
+  if (!planetSounds[name]) return;
 
+  // arrêt des autres sons
   Object.values(planetSounds).forEach(s => {
     s.pause();
     s.currentTime = 0;
   });
 
-  planetSounds[name].play().catch((e)=>{
-    console.warn("iPhone bloque encore :", e);
+  planetSounds[name].play().catch(e => {
+    console.warn("Impossible de jouer le son :", e);
   });
 }
 
-// --- Bouton pause système ---
-let systemPaused = false;
-const toggleSystemBtn = document.getElementById('toggle-system');
-
-toggleSystemBtn.addEventListener('click', () => {
+// --- BOUTON PAUSE / REPRENDRE LE SYSTÈME SOLAIRE ---
+const toggleSystemBtn = document.getElementById("toggle-system");
+toggleSystemBtn.addEventListener("click", () => {
   systemPaused = !systemPaused;
-  toggleSystemBtn.textContent = systemPaused ? "▶️ Reprendre système" : "⏸️ Pause système";
 
-  planetOrbits.forEach(({ anim }) => {
-    systemPaused ? anim.pause() : anim.play();
-  });
-  // Pause ou reprise de la Lune
-  systemPaused ? moonAnim.pause() : moonAnim.play();
-});
+  if (systemPaused) {
+    // Pause toutes les animations Anime.js enregistrées
+    planetOrbits.forEach(({ anim }) => anim.pause());
+    if (moonAnim) moonAnim.pause();
+
+    toggleSystemBtn.textContent = "▶ Reprendre système";
+    toggleSystemBtn.classList.add("paused");
+  } else {
+    // Reprendre
+    planetOrbits.forEach(({ anim }) => anim.play());
+    if (moonAnim) moonAnim.play();
+
+    toggleSystemBtn.textContent = "⏸️ Pause système";
+    toggleSystemBtn.classList.remove("paused");
+  }
 });
