@@ -228,7 +228,7 @@ moon.className = "moon";
 earth.appendChild(moon);
 
 // Animation de la lune (orbite autour de la Terre)
-anime({
+const moonAnim = anime({
   targets: moon,
   rotate: "1turn",
   duration: 2500, // vitesse de rotation
@@ -275,4 +275,7 @@ toggleSystemBtn.addEventListener('click', () => {
   planetOrbits.forEach(({ anim }) => {
     systemPaused ? anim.pause() : anim.play();
   });
+  // Pause ou reprise de la Lune
+  systemPaused ? moonAnim.pause() : moonAnim.play();
+});
 });
