@@ -7,6 +7,11 @@ const planetOrbits = [];
 let globalSpeed = 1;
 let zoomLevel = 1;
 
+// pour le bouton ON/OFF son des planètes
+let muteMode = false; // ON/OFF temporaire du son 
+let audioUnlocked = false;
+let systemPaused = false;
+
 // Fonction d'orbite
 function orbit(planet, distance, duration) {
   const anim = anime({
@@ -109,18 +114,20 @@ const planetInfo = {
 const planetName = document.getElementById('planet-name');
 const planetText = document.getElementById('planet-info');
 
-// Interactions : clics
+// Interactions : clics planètes
 planets.forEach(p => {
   p.addEventListener('click', () => {
     const name = p.dataset.name;
     planetName.textContent = name;
     planetText.innerHTML = planetInfo[name] || "Aucune information disponible.";
+    playSound(name);
   });
 });
 
 sun.addEventListener('click', () => {
   planetName.textContent = "Soleil";
   planetText.innerHTML = planetInfo["Soleil"];
+  playSound("Soleil");
 });
 
 // Slider de vitesse
@@ -153,6 +160,20 @@ window.addEventListener('wheel', e => {
   zoomValue.textContent = zoomLevel.toFixed(1) + "x";
 }, { passive: false });
 
+// --- PLAYSOUND / Fonction pour jouer les sons ---
+function playSound(name) {
+  if (!planetSounds[name]) return;
+
+  // Si le son était coupé par STOP → réactivation automatique
+  if (muteMode) muteMode = false;
+
+  // Stopper tout avant de démarrer un autre son
+  Object.values(planetSounds).forEach(s => { s.pause(); s.currentTime=0; });
+
+  // Jouer le son
+  planetSounds[name].play().catch(e => console.warn("Audio bloqué:", e));
+}
+
 // --- Sons des planètes ---
 const planetSounds = {
   Soleil: new Audio("sun.mp3"),
@@ -166,161 +187,45 @@ const planetSounds = {
   Neptune: new Audio("neptune.mp3")
 };
 
-// --- Débloquer audio iPhone / Safari ---
-let audioUnlocked = false;
-
-function unlockAudio() {
-  if (audioUnlocked) return;
-
-  Object.values(planetSounds).forEach(sound => {
-    sound.play().catch(()=>{}); // essai obligatoire
-    sound.pause();
-    sound.currentTime = 0;
-  });
-
-  audioUnlocked = true;
-  console.log("Audio débloqué 🎧");
-}
-
-window.addEventListener("touchstart", unlockAudio, { once: true });
-window.addEventListener("click", unlockAudio, { once: true });
-
-// --- Fonction pour jouer les sons ---
-function playSound(name) {
-  if (!planetSounds[name]) return;
-
-  Object.values(planetSounds).forEach(s => {
-    s.pause();
-    s.currentTime = 0;
-  });
-
-  planetSounds[name].play().catch((e)=>{
-    console.warn("iPhone bloque encore :", e);
-  });
-}
-
-// --- Clic sur une planète ---
-planets.forEach(p => {
-  p.addEventListener("click", () => {
-    const name = p.dataset.name;
-    planetName.textContent = name;
-    planetText.innerHTML = planetInfo[name];
-    playSound(name);
-  });
-});
-
-// --- Soleil ---
-sun.addEventListener("click", () => {
-  planetName.textContent = "Soleil";
-  planetText.innerHTML = planetInfo["Soleil"];
-  playSound("Soleil");
-});
-
-/* --- ➕ Ajout de la Lune autour de la Terre --- */
+// --- Ajout de la Lune autour de la Terre ---
 const earth = document.querySelector('.earth');
-
 const moon = document.createElement("div");
 moon.className = "moon";
 earth.appendChild(moon);
 
-// --- ETAT GLOBAUX ---
-let soundEnabled = true;   // true = son autorisé, false = muet
-let systemPaused = false;  // état Pause / Lecture
-
-// --- ASSURE QUE LA LUNE A UNE RÉFÉRENCE D'ANIMATION (remplace ton anime(...) existant) ---
-let moonAnim = null;
-if (typeof moon !== "undefined" && moon) {
-  moonAnim = anime({
-    targets: moon,
-    rotate: "1turn",
-    duration: 2500,
-    loop: true,
-    easing: "linear",
-    update: anim => {
-      const angle = (anim.progress/100)*2*Math.PI;
-      const x = Math.cos(angle)*28;
-      const y = Math.sin(angle)*28;
-      moon.style.transform = `translate(${x}px,${y}px)`;
-    }
-  });
-}
-
-// --- BOUTON SON (ON/OFF) ---
-const toggleSoundBtn = document.getElementById("toggle-sound");
-toggleSoundBtn.addEventListener("click", () => {
-  soundEnabled = !soundEnabled;
-
-  // Mettre à jour l'apparence du bouton
-  toggleSoundBtn.textContent = soundEnabled ? "🔊 Son : ON" : "🔇 Son : OFF";
-  toggleSoundBtn.classList.toggle("off", !soundEnabled);
-
-  // Si on coupe le son, arrêter tous les sons en cours
-  if (!soundEnabled) {
-    Object.values(planetSounds).forEach(s => {
-      if (!s.paused) {
-        s.pause();
-        s.currentTime = 0;
-      }
-    });
+let moonAnim = anime({
+  targets: moon,
+  rotate: "1turn",
+  duration: 2500,
+  loop: true,
+  easing: "linear",
+  update: anim => {
+    const angle = (anim.progress/100)*2*Math.PI;
+    const x = Math.cos(angle)*28;
+    const y = Math.sin(angle)*28;
+    moon.style.transform = `translate(${x}px,${y}px)`;
   }
 });
 
-// --- MODIFIER LA FONCTION playSound(name) pour respecter soundEnabled ---
-function playSound(name) {
-  if (!soundEnabled) return;           // si muet, ne joue rien
-  if (!planetSounds[name]) return;
-
-  // arrêt des autres sons
-  Object.values(planetSounds).forEach(s => {
-    s.pause();
-    s.currentTime = 0;
-  });
-
-  planetSounds[name].play().catch(e => {
-    console.warn("Impossible de jouer le son :", e);
-  });
-}
+// --- BOUTON STOP SON ---
+document.getElementById("stop-sound").addEventListener("click", () => {
+  Object.values(planetSounds).forEach(s => { s.pause(); s.currentTime=0; });
+  muteMode = true;
+});
 
 // --- BOUTON PAUSE / REPRENDRE LE SYSTÈME SOLAIRE ---
 const toggleSystemBtn = document.getElementById("toggle-system");
 toggleSystemBtn.addEventListener("click", () => {
   systemPaused = !systemPaused;
-
   if (systemPaused) {
-    // Pause toutes les animations Anime.js enregistrées
     planetOrbits.forEach(({ anim }) => anim.pause());
     if (moonAnim) moonAnim.pause();
-
     toggleSystemBtn.textContent = "▶ Reprendre système";
     toggleSystemBtn.classList.add("paused");
   } else {
-    // Reprendre
     planetOrbits.forEach(({ anim }) => anim.play());
     if (moonAnim) moonAnim.play();
-
     toggleSystemBtn.textContent = "⏸️ Pause système";
     toggleSystemBtn.classList.remove("paused");
   }
 });
-
-const stopSoundBtn = document.getElementById("stop-sound");
-function playSound(name) {
-
-  // Si le son était coupé → on le réactive automatiquement
-  if (muteMode) {
-    muteMode = false;
-  }
-
-  if (!planetSounds[name]) return;
-
-  // Stoppe les sons des autres planètes
-  Object.values(planetSounds).forEach(s => {
-    s.pause();
-    s.currentTime = 0;
-  });
-
-  // Joue le son
-  planetSounds[name].play().catch(e => {
-    console.warn("iPhone bloque encore :", e);
-  });
-}
