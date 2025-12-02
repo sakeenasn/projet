@@ -241,3 +241,38 @@ anime({
     moon.style.transform = `translate(${x}px,${y}px)`;
   }
 });
+
+// --- Bouton son ---
+let soundOn = true;
+const toggleSoundBtn = document.getElementById('toggle-sound');
+
+toggleSoundBtn.addEventListener('click', () => {
+  soundOn = !soundOn;
+  toggleSoundBtn.textContent = soundOn ? "🔊 Son : ON" : "🔇 Son : OFF";
+});
+
+function playSound(name) {
+  if (!soundOn || !planetSounds[name]) return;
+
+  Object.values(planetSounds).forEach(s => {
+    s.pause();
+    s.currentTime = 0;
+  });
+
+  planetSounds[name].play().catch((e)=>{
+    console.warn("iPhone bloque encore :", e);
+  });
+}
+
+// --- Bouton pause système ---
+let systemPaused = false;
+const toggleSystemBtn = document.getElementById('toggle-system');
+
+toggleSystemBtn.addEventListener('click', () => {
+  systemPaused = !systemPaused;
+  toggleSystemBtn.textContent = systemPaused ? "▶️ Reprendre système" : "⏸️ Pause système";
+
+  planetOrbits.forEach(({ anim }) => {
+    systemPaused ? anim.pause() : anim.play();
+  });
+});
