@@ -304,33 +304,23 @@ toggleSystemBtn.addEventListener("click", () => {
 });
 
 const stopSoundBtn = document.getElementById("stop-sound");
-
-// --- Fonction pour jouer les sons ---
 function playSound(name) {
 
-  // Réactive le bouton Stop si désactivé
-  stopSoundBtn.classList.remove("disabled");
+  // Si le son était coupé → on le réactive automatiquement
+  if (muteMode) {
+    muteMode = false;
+  }
 
   if (!planetSounds[name]) return;
 
+  // Stoppe les sons des autres planètes
   Object.values(planetSounds).forEach(s => {
     s.pause();
     s.currentTime = 0;
   });
 
-  planetSounds[name].play().catch((e)=>{
+  // Joue le son
+  planetSounds[name].play().catch(e => {
     console.warn("iPhone bloque encore :", e);
   });
 }
-
-// --- Bouton pour stopper tous les sons ---
-stopSoundBtn.addEventListener("click", () => {
-  Object.values(planetSounds).forEach(sound => {
-    sound.pause();
-    sound.currentTime = 0;
-  });
-
-  // désactivation du bouton
-  stopSoundBtn.classList.add("disabled");
-  console.log("Tous les sons arrêtés 🔇");
-});
