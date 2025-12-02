@@ -302,3 +302,35 @@ toggleSystemBtn.addEventListener("click", () => {
     toggleSystemBtn.classList.remove("paused");
   }
 });
+
+const stopSoundBtn = document.getElementById("stop-sound");
+
+// --- Fonction pour jouer les sons ---
+function playSound(name) {
+
+  // Réactive le bouton Stop si désactivé
+  stopSoundBtn.classList.remove("disabled");
+
+  if (!planetSounds[name]) return;
+
+  Object.values(planetSounds).forEach(s => {
+    s.pause();
+    s.currentTime = 0;
+  });
+
+  planetSounds[name].play().catch((e)=>{
+    console.warn("iPhone bloque encore :", e);
+  });
+}
+
+// --- Bouton pour stopper tous les sons ---
+stopSoundBtn.addEventListener("click", () => {
+  Object.values(planetSounds).forEach(sound => {
+    sound.pause();
+    sound.currentTime = 0;
+  });
+
+  // désactivation du bouton
+  stopSoundBtn.classList.add("disabled");
+  console.log("Tous les sons arrêtés 🔇");
+});
